@@ -1,0 +1,43 @@
+body {
+    font-family: sans-serif;
+    background: white;
+    color: black;
+}
+svg {
+    position: absolute;
+    top: 0;
+}
+
+
+.control{
+    position: relative;
+}
+
+.chart{
+    position: relative;
+}
+
+.slider {
+  fill: #fff;
+  stroke: #e3dede;
+  stroke-width: 5px;
+}
+
+.dot circle:hover {
+  cursor: pointer;
+}
+
+.dot circle {
+  fill: lightsteelblue;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.dot circle.dragging {
+  fill: red;
+  stroke: brown;
+}
+
+#map {
+        position: absolute;
+      }
