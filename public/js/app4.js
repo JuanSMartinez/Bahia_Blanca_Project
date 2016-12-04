@@ -32,7 +32,7 @@
     var hWidth = (effWidth - (2*rMonth+radialDelta))/2 - horizonDelta;
         
     //Holidays text container
-    var txtSize = 24
+    var txtSize = 20
     var holydayContainer = svg.append("g");
     var dayType = holydayContainer.append("text")
         .attr("x", margin.left)
