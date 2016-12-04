@@ -1,6 +1,6 @@
 body {
     font-family: sans-serif;
-    background: white;
+    background: #e6e6e6;
     color: black;
 }
 svg {
@@ -18,8 +18,8 @@ svg {
 }
 
 .slider {
-  fill: #fff;
-  stroke: #e3dede;
+  fill: #e2e2e2;
+  stroke: steelblue;
   stroke-width: 5px;
 }
 

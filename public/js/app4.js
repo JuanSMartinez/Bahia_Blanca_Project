@@ -31,6 +31,29 @@
     //Width of horizon charts
     var hWidth = (effWidth - (2*rMonth+radialDelta))/2 - horizonDelta;
         
+    //Holidays text container
+    var txtSize = 24
+    var holydayContainer = svg.append("g");
+    var dayType = holydayContainer.append("text")
+        .attr("x", margin.left)
+        .attr("y", margin.top + 2*txtSize)
+        .attr("font-family", "Arial")
+        .attr("font-size", txtSize + "px")
+        .text("Día: Normal");
+    var dayDesc = holydayContainer.append("text")
+        .attr("x", margin.left)
+        .attr("y", margin.top + 4*txtSize)
+        .attr("font-family", "Arial")
+        .attr("font-size", txtSize + "px")
+        .attr("dy",0)
+        .text("").call(wrap, 2*radialDelta);
+//    var dayDesc = holydayContainer.append("text")
+//        .attr("x", margin.left)
+//        .attr("y", margin.top + 4*txtSize)
+//        .attr("font-family", "Arial")
+//        .attr("font-size", txtSize + "px")
+//        .text("");
+//         
     //Velocity chart container
     var velocityContainer = svg.append("g").attr("transform", "translate("+(2*rMonth+radialDelta + horizonDelta/2)+","+effHeight/2+")");
     var velocityContainers = [];
@@ -157,7 +180,9 @@
     var yearRange = [2010,2011,2012,2013,2014,2015,2016];
     
     //Selected  year, month and day
-    var year, month, day;
+    var year = 2010;
+    var month = 1;
+    var day = 1;
     
     //Horizontal slider
     function hSlider(array, height, width, x, y){
@@ -172,7 +197,7 @@
         .attr('x2', width/2)
         .attr('y2', height/2)
         .style("stroke-width", 2)
-        .style("stroke", "black")
+        .style("stroke", "steelblue")
         .style("fill", "none");
         var drag = d3.drag()
               .on("start", dragstarted)
@@ -410,8 +435,6 @@
             }
             var closestAngle = closestTag(angle)[1];
             d3.select(this)
-            //.attr("cx", d.x = circumference_r*Math.cos(closestAngle))
-            //.attr("cy", d.y = d3.event.y < 0 ? -circumference_r*Math.sin(closestAngle) : circumference_r*Math.sin(closestAngle));
             .attr("cx", d.x = circumference_r*Math.cos(closestAngle))
             .attr("cy", d.y = circumference_r*Math.sin(closestAngle));
             
@@ -551,11 +574,64 @@
                 .call(chart.duration(2000));                                                               
         });
         
+        //Determine if the day is a holyday
+        $.ajax({
+            dataType: "json",
+            url: "http://nolaborables.com.ar/API/v1/" + year,
+            data: null,
+            success: function(data, status, jqXHR){
+                if(status == "success"){
+                    var found = false;
+                    data.forEach(function(obj){
+                        if(obj.dia == day && obj.mes == month){
+                            dayType.text("Día: Festivo");  
+                            dayDesc.text("Motivo: " + obj.motivo).call(wrap, radialDelta*2);
+                            found = true;
+                        }
+                        if(!found){
+                            dayType.text("Día: Normal");  
+                            dayDesc.text("");
+                        }
+                    });
+                }
+            }
+        });
+        
+        
     }
+        
+    //END: Update of horizon charts*****************************************************************************
+    
+    //BEGIN: Text wrapping from Mike Bostock ******************************************************************  
+    function wrap(text, width) {
+      text.each(function() {
+        var text = d3.select(this),
+            words = text.text().split(/\s+/).reverse(),
+            word,
+            line = [],
+            lineNumber = 0,
+            lineHeight = 1.1, // ems
+            y = text.attr("y"),
+            dy = parseFloat(text.attr("dy")),
+            tspan = text.text(null).append("tspan").attr("x", margin.left).attr("y", y).attr("dy", dy + "em");
+  
+        while (word = words.pop()) {
+          line.push(word);
+          tspan.text(line.join(" "));
+          if (tspan.node().getComputedTextLength() > width) {
+            line.pop();
+            tspan.text(line.join(" "));
+            line = [word];
+            tspan = text.append("tspan").attr("x", margin.left).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+          }
+        }
+      });
+    }
+    //END: Text wrapping from Mike Bostock ******************************************************************  
         
     //BEGIN: Get position values from clicked data in the horizon charts **************************************
     var line = false;
-        var polyline;
+    var polyline;
     function clickedLatLng(x, y, xShift){
         var linePosition = Math.floor((y - effHeight/2)/(chartHeight+2));
         var halfHourSize = hWidth/48;
@@ -581,8 +657,6 @@
     }
     
     //END: Get position values from clicked data in the horizon charts ****************************************
-    
-    //END: Update of horizon charts*****************************************************************************
         
        filterData(data)  
        update()
