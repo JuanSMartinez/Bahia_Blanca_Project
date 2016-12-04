@@ -180,7 +180,7 @@
     var yearRange = [2010,2011,2012,2013,2014,2015,2016];
     
     //Selected  year, month and day
-    var year = 2010;
+    var year = 2013;
     var month = 1;
     var day = 1;
     
@@ -575,27 +575,61 @@
         });
         
         //Determine if the day is a holyday
-        $.ajax({
-            dataType: "json",
-            url: "http://nolaborables.com.ar/API/v1/" + year,
-            data: null,
-            success: function(data, status, jqXHR){
-                if(status == "success"){
-                    var found = false;
-                    data.forEach(function(obj){
-                        if(obj.dia == day && obj.mes == month){
-                            dayType.text("Día: Festivo");  
-                            dayDesc.text("Motivo: " + obj.motivo).call(wrap, radialDelta*2);
-                            found = true;
-                        }
-                        if(!found){
-                            dayType.text("Día: Normal");  
-                            dayDesc.text("");
-                        }
-                    });
-                }
+        d3.json("json/"+year+".json", function(error, data){
+            if(!error){
+                var found = false;
+                data.forEach(function(obj){
+                    if(obj.dia == day && obj.mes == month){
+                       
+                        dayType.text("Día: Festivo");  
+                        dayDesc.text("Motivo: " + obj.motivo).call(wrap, radialDelta*2);
+                        found = true;
+                    }
+                    if(!found){
+                        dayType.text("Día: Normal");  
+                        dayDesc.text("");
+                    }
+                });
             }
         });
+        d3.json("json/fijos.json", function(error, data){
+            if(!error){
+                var found = false;
+                data.forEach(function(obj){
+                    if(obj.dia == day && obj.mes == month){
+                
+                        dayType.text("Día: Festivo");  
+                        dayDesc.text("Motivo: " + obj.motivo).call(wrap, radialDelta*2);
+                        found = true;
+                    }
+                    if(!found){
+                        dayType.text("Día: Normal");  
+                        dayDesc.text("");
+                    }
+                });
+            }
+        });
+//        $.ajax({
+//            dataType: "json",
+//            url: "http://nolaborables.com.ar/API/v1/" + year,
+//            data: null,
+//            success: function(data, status, jqXHR){
+//                if(status == "success"){
+//                    var found = false;
+//                    data.forEach(function(obj){
+//                        if(obj.dia == day && obj.mes == month){
+//                            dayType.text("Día: Festivo");  
+//                            dayDesc.text("Motivo: " + obj.motivo).call(wrap, radialDelta*2);
+//                            found = true;
+//                        }
+//                        if(!found){
+//                            dayType.text("Día: Normal");  
+//                            dayDesc.text("");
+//                        }
+//                    });
+//                }
+//            }
+//        });
         
         
     }
