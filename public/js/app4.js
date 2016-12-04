@@ -181,8 +181,8 @@
     
     //Selected  year, month and day
     var year = 2013;
-    var month = 1;
-    var day = 1;
+    var month = 10;
+    var day = 24;
     
     //Horizontal slider
     function hSlider(array, height, width, x, y){
