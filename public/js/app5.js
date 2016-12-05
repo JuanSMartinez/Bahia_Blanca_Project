@@ -1,12 +1,15 @@
 (function(){
 
-    //BEGIN: Read json***************************************************************************
+    //BEGIN: Read json velocity***************************************************************************
     d3.json("json/buses.json", function(error, data){
        if(error){
            throw error;
        }
         
     //BEGIN: Global parameters*****************************************************************************
+        
+    //Bus id range
+    var idRange = ["319", "500", "502", "502 extension", "503", "504", "505", "506", "507", "509", "512", "513", "513 expreso", "514", "516", "517", "518", "519", "519a"];
     
     //SVG
     var width =1300;
@@ -126,6 +129,17 @@
                     .mode("offset")
                     .curve(d3.curveMonotoneX)
                     .colors(["#fac173", "#ffa310", "#1877e5", "#1ad5f7"]);
+        
+    //Bus names container
+    var busNamesContainer = svg.append("g").attr("transform", "translate("+(2*rMonth+radialDelta + horizonDelta/2)+","+effHeight/2+")");
+    idRange.forEach(function(id, i){
+        busNamesContainer.append("text")
+                            .attr("x", (2*rMonth+radialDelta + horizonDelta/2))
+                            .attr("y", effHeight/2 + i*10)
+                            .attr("font-family", "Arial")
+                            .attr("font-size", 10 + "px")
+                            .text(id);
+    });
         
     //Horizontal time scale
     //var halfHourScale = d3.scaleLinear().domain([0, 4]).range([0, hWidth]);
@@ -673,6 +687,6 @@
        update()
     });
     
-    //END: Read json*****************************************************************************
+    //END: Read json velocity*****************************************************************************
 
 })();
