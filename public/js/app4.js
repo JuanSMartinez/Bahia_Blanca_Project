@@ -574,34 +574,30 @@
                 var found = false;
                 data.forEach(function(obj){
                     if(obj.dia == day && obj.mes == month){
-                       
                         dayType.text("Día: Festivo");  
                         dayDesc.text("Motivo: " + obj.motivo).call(wrap, radialDelta*2);
                         found = true;
                     }
                     if(!found){
-                        dayType.text("Día: Normal");  
-                        dayDesc.text("");
+                        d3.json("json/fijos.json", function(error, data){
+                        if(!error){
+                            var found = false;
+                            data.forEach(function(obj){
+                                if(obj.dia == day && obj.mes == month){
+                                    dayType.text("Día: Festivo");  
+                                    dayDesc.text("Motivo: " + obj.motivo).call(wrap, radialDelta*2);
+                                    found = true;
+                                }
+                                if(!found){
+                                    dayType.text("Día: Normal");  
+                                    dayDesc.text("");
+                                }
+                            });
+                        }
+                    });
                     }
                 });
-            }
-        });
-        d3.json("json/fijos.json", function(error, data){
-            if(!error){
-                var found = false;
-                data.forEach(function(obj){
-                    if(obj.dia == day && obj.mes == month){
-                
-                        dayType.text("Día: Festivo");  
-                        dayDesc.text("Motivo: " + obj.motivo).call(wrap, radialDelta*2);
-                        found = true;
-                    }
-                    if(!found){
-                        dayType.text("Día: Normal");  
-                        dayDesc.text("");
-                    }
-                });
-            }
+            } 
         });
         
         
