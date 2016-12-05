@@ -52,6 +52,28 @@
         .attr("dy",0)
         .text("").call(wrap, 2*radialDelta);
         
+    var hoverInfoContainer = svg.append("g").attr("transform", "translate(0,"+(effHeight/2+165)+")");
+    var busLineHovered = hoverInfoContainer.append("text")
+        .attr("x", margin.left)
+        .attr("y", margin.top + 2*txtSize)
+        .attr("font-family", "Arial")
+        .attr("font-size", txtSize + "px")
+        .text("Linea:");
+    var hourHovered = hoverInfoContainer.append("text")
+        .attr("x", margin.left)
+        .attr("y", margin.top + 4*txtSize)
+        .attr("font-family", "Arial")
+        .attr("font-size", txtSize + "px")
+        .attr("dy",0)
+        .text("Hora:");
+    var chartHovered = hoverInfoContainer.append("text")
+        .attr("x", margin.left)
+        .attr("y", margin.top + 6*txtSize)
+        .attr("font-family", "Arial")
+        .attr("font-size", txtSize + "px")
+        .attr("dy",0)
+        .text("Gráfica enfocada:");
+        
     //Velocity chart container
     var velocityContainer = svg.append("g").attr("transform", "translate("+(2*rMonth+radialDelta + horizonDelta/2)+","+effHeight/2+")");
     var velocityContainers = [];
@@ -74,6 +96,7 @@
     velocityHoverRect.on("mousemove", function(){
         cursorLineV.attr("x1", d3.mouse(this)[0] );
         cursorLineV.attr("x2", d3.mouse(this)[0] );
+        showHoverValues(d3.mouse(this)[0],d3.mouse(this)[1], (2*rMonth+radialDelta + horizonDelta/2), 0);
     });
         
     //People container
@@ -98,6 +121,7 @@
     peopleHoverRect.on("mousemove", function(){
         cursorLineP.attr("x1", d3.mouse(this)[0] );
         cursorLineP.attr("x2", d3.mouse(this)[0] );
+        showHoverValues(d3.mouse(this)[0],d3.mouse(this)[1], (hWidth+2*rMonth+radialDelta + horizonDelta), 1);
     });
         
     //Map container
@@ -147,6 +171,7 @@
                             .attr("font-size", 12 + "px")
                             .text(id);
     });
+
         
     //Horizontal time scale
     //var halfHourScale = d3.scaleLinear().domain([0, 4]).range([0, hWidth]);
@@ -686,6 +711,21 @@
             line = false;
         }
         
+    }
+        
+    function showHoverValues(x, y, xShift, type){
+       
+        var linePosition = Math.floor((y - effHeight/2)/(chartHeight+2));
+        var halfHourSize = hWidth/48;
+        var halfHourPosition = Math.floor((x - xShift)/halfHourSize);
+        var halfHour = filtered[linePosition][halfHourPosition][0];
+        
+        busLineHovered.text("Linea: " + idRange[linePosition]);
+        hourHovered.text("Hora: " + Math.floor((halfHour+1)/2) + ":" + (((halfHour+1)%2)*30));
+        if(type == 0 )
+            chartHovered.text("Gráfica enfocada: Velocidad");
+        else
+            chartHovered.text("Gráfica enfocada: Personas");
     }
     
     //END: Get position values from clicked data in the horizon charts ****************************************
