@@ -578,7 +578,8 @@
                         dayDesc.text("Motivo: " + obj.motivo).call(wrap, radialDelta*2);
                         found = true;
                     }
-                    if(!found){
+                });
+                if(!found){
                         d3.json("json/fijos.json", function(error, data){
                         if(!error){
                             var found = false;
@@ -592,12 +593,11 @@
                                     dayType.text("Día: Normal");  
                                     dayDesc.text("");
                                 }
-                                
+
                             });
                         }
                     });
-                    }
-                });
+                }
             } 
         });
         
