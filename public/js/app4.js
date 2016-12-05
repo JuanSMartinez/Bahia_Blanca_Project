@@ -592,6 +592,7 @@
                                     dayType.text("Día: Normal");  
                                     dayDesc.text("");
                                 }
+                                
                             });
                         }
                     });
