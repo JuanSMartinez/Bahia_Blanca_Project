@@ -5,10 +5,54 @@
         <title>Buses en Bahía Blanca</title>
         <link rel="stylesheet" type="text/css" href="css/main.css">
         <link rel="stylesheet" href="https://mapzen.com/js/mapzen.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     </head>
-    <body>
+    <body id="container">
         <h1>Visualization for public transport data in Bahía Blanca, Argentina</h1>
-        <p>TODO: format this page to add the past README content translated to English in a proper manner</p>
-        <a href="vis">Visualization</a>
+        <h2>Juan Sebastian Martinez</h2>
+        <h2>Mario Varon</h2>
+        <h3>Visualization</h3>
+        <p>Jump directly to the <a href="vis">visualization</a></p>
+        <h3>Description</h3>
+        <p>The city of Bahía Blanca in Argentina has gathered information about their bus transport system from the year 2010 to the year 2016. With this information, it is interesting for the urban transport analysts to study the behavior of the buses in their normal routes, as well as discovering the behavior of passengers in this transport system.</p>
+        <p>With these objectives, information about the bus routes, position, velocity, passengers and other variables is available for a visualization to reveal insights regarding the following specific goals:</p>
+        <ol>
+            <li> Visualize the descriptive information of traffic with the purpose of deriving metrics to evaluate the transport system performance (i.e trip time or cost) in order to build an ATIS system (Advanced traveler information system).
+            </li> 
+            <li> Visualize information of the APC (Automatic Passenger Counting System) system to optimize the operation cost of buses in the city of Bahía Blanca.
+            </li>
+            <li>
+                Preprocess transport data to derive statistics about the population that enable analysts to characterize the behavior of buses and passengers to a certain extent.
+            </li>
+        </ol>
+        <p>For more information about the proyect, please read our <a href="https://github.com/JuanSMartinez/Visual_Analytics_201620/tree/master/Documentos">documents.</a></p>
+        <h3>Visualization characteristics</h3>
+        <h4>What:</h4>
+        
+        <p>Geographical data with different quantitative and sequential attributes, which include displacement velocities, number of passangers, distance travelled, course and the state of the bus represented by categorical data, like the license plate of the bus.</p>
+
+        <h4>Why:</h4>
+
+        <p>The tasks for this project are:</p>
+        <ol>
+        <li>Discover the distribution of velocity data through the day.</li>
+        <li>Explore the outliers of velocity to identify non-recurrent traffic congestion events.</li>
+        <li>Identify the features of bus routes through the day.</li>
+        <li>Discover the characteristics of passenger data classified by bus.</li>
+        </ol>
+        
+        <h4>How:</h4>
+
+        <p>Visualizing velocity and passenger data in horizon charts filtered by year, month and day. Both charts will contain data for the different buses and will be supported by an interactive map of the city that links the geographical data to the quantitative data.</p>
+        
+        <h3>Collaboration</h3>
+
+        The project is developed with the collaboration of Claudio Delrieux and Rodrigo René Cura, who provided the bus data in the city and represent the client and final user.
+
+        <h3>URL of the class</h3>
+
+        <p>This project was developed under the scheme of the course "Visual Analytics" of the university Universidad de los Andes in Bogotá Colombia. The official course website can be found <a href="http://johnguerra.co/classes/isis_4822_fall_2016/">here.</a></p>
+        
+        
     </body>
 </html>

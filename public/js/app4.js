@@ -47,13 +47,7 @@
         .attr("font-size", txtSize + "px")
         .attr("dy",0)
         .text("").call(wrap, 2*radialDelta);
-//    var dayDesc = holydayContainer.append("text")
-//        .attr("x", margin.left)
-//        .attr("y", margin.top + 4*txtSize)
-//        .attr("font-family", "Arial")
-//        .attr("font-size", txtSize + "px")
-//        .text("");
-//         
+        
     //Velocity chart container
     var velocityContainer = svg.append("g").attr("transform", "translate("+(2*rMonth+radialDelta + horizonDelta/2)+","+effHeight/2+")");
     var velocityContainers = [];
@@ -609,27 +603,6 @@
                 });
             }
         });
-//        $.ajax({
-//            dataType: "json",
-//            url: "http://nolaborables.com.ar/API/v1/" + year,
-//            data: null,
-//            success: function(data, status, jqXHR){
-//                if(status == "success"){
-//                    var found = false;
-//                    data.forEach(function(obj){
-//                        if(obj.dia == day && obj.mes == month){
-//                            dayType.text("Día: Festivo");  
-//                            dayDesc.text("Motivo: " + obj.motivo).call(wrap, radialDelta*2);
-//                            found = true;
-//                        }
-//                        if(!found){
-//                            dayType.text("Día: Normal");  
-//                            dayDesc.text("");
-//                        }
-//                    });
-//                }
-//            }
-//        });
         
         
     }
