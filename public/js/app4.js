@@ -89,7 +89,8 @@
             .attr("y2", effHeight)
             .style("stroke-width", 1)
             .style("stroke", "black")
-            .style("fill", "none");
+            .style("fill", "none")
+            .on("click",function(){clickedLatLng(d3.mouse(this)[0],d3.mouse(this)[1], (2*rMonth+radialDelta + horizonDelta + hWidth));});
     peopleHoverRect.on("mousemove", function(){
         cursorLineP.attr("x1", d3.mouse(this)[0] );
         cursorLineP.attr("x2", d3.mouse(this)[0] );
@@ -494,16 +495,20 @@
         
     //BEGIN: Temporal Filter data function
         
-    var testPositions = [[-38.723837, -62.273433],
-                         [-38.712163, -62.278646],
-                         [-38.691591, -62.234931],
-                         [-38.704266, -62.293353],
-                         [-38.700962, -62.271367],
-                         [-38.667934, -62.265776],
-                         [-38.753081, -62.266180],
-                         [-38.736157, -62.288434],
-                         [-38.714423, -62.195488],
-                         [-38.705742, -62.207347]];
+    var testPositions = [[-38.717341, -62.267464],
+                         [-38.712874, -62.261685],
+                         [-38.709749, -62.263971],
+                         [-38.705840, -62.267190],
+                         [-38.707552, -62.269233],
+                         [-38.709261, -62.267450],
+                         [-38.710902, -62.269939],
+                         [-38.711672, -62.269080],
+                         [-38.714041, -62.271880],
+                         [-38.706127, -62.282372],
+                         [-38.714810, -62.293149],
+                        [-38.710362, -62.298823],
+                        [-38.721018, -62.312818],
+                        [-38.710175, -62.326898]];
         
     function filterData(rawData){
         n = 48;
@@ -637,12 +642,13 @@
     var line = false;
     var polyline;
     function clickedLatLng(x, y, xShift){
+        
         var linePosition = Math.floor((y - effHeight/2)/(chartHeight+2));
         var halfHourSize = hWidth/48;
         var halfHourPosition = Math.floor((x - xShift)/halfHourSize);
         var halfHour = filtered[linePosition][halfHourPosition][0];
         var velocity = filtered[linePosition][halfHourPosition][1];
-        
+        console.log(linePosition + ", " +halfHourPosition);
         var localizationArray = localizationData[linePosition];
         var latLong = localizationArray[halfHour];
         markers.removeLayer(marker);
