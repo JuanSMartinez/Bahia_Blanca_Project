@@ -4,15 +4,13 @@
 ## Universidad de los Andes, Fall 2016
 
 ### Description
-The city of Bahía Blanca in Argentina has gathered information about their bus transport system from the year 2010 to the year 2016. With this information, it is interesting for the urban transport analysts to study the behaviour of the buses in their normal routes, as well as discovering the behaviour of passengers in this transport system.
+The city of Bahía Blanca in Argentina has gathered information about their bus transport system from the year 2010 to the year 2016. With this information, it is interesting for the urban transport analysts to study the behavior of the buses in their normal routes, as well as discovering the behavior of passengers in this transport system.
 
-With this objectives, information about the bus routes, position, velocity, passengers and other variables is available for a visualization to reveal insights regarding the following specific goals:
+With these objectives, information about the bus routes, position, velocity, passengers and other variables is available for a visualization to reveal insights regarding the following specific goals:
 
-1. Visualize the descriptive information of traffic with the purpose of deriving metrics to evaluate the transport system performance (i.e trip time or cost) in order to build an ATIS system (Advanced traveller information system).
-
-2. Visualize information of the APC (Automatic Passenger Counting System) system in order to optimize the operation cost of buses in the city of Bahía Blanca.
-
-3. Preprocess transport data to derive statistics about the population that enable analysts to characterize the behaviour of buses and passengers to a certain extent.
+1.	Visualize the descriptive information of traffic with the purpose of deriving metrics to evaluate the transport system performance (i.e trip time or cost) in order to build an ATIS system (Advanced traveler information system).
+2.	Visualize information of the APC (Automatic Passenger Counting System) system to optimize the operation cost of buses in the city of Bahía Blanca.
+3.	Preprocess transport data to derive statistics about the population that enable analysts to characterize the behavior of buses and passengers to a certain extent.
 
 For more information about the proyect, please read our  [documents.](https://github.com/JuanSMartinez/Visual_Analytics_201620/tree/master/Documentos)
 
