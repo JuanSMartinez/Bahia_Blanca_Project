@@ -4,6 +4,7 @@
 ## Universidad de los Andes, Fall 2016
 
 ### Description
+![Visualization](username.github.com/repository/img/image.jpg)
 The city of Bahía Blanca in Argentina has gathered information about their bus transport system from the year 2010 to the year 2016. With this information, it is interesting for the urban transport analysts to study the behavior of the buses in their normal routes, as well as discovering the behavior of passengers in this transport system.
 
 With these objectives, information about the bus routes, position, velocity, passengers and other variables is available for a visualization to reveal insights regarding the following specific goals:
