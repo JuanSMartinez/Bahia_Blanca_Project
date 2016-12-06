@@ -3,9 +3,11 @@
     //BEGIN: Read json***************************************************************************
     d3.json("json/buses_final_passenger.json", function(errorP, dataP){
     d3.json("json/buses_final_velocity.json", function(error, data){
+        
        if(error || errorP){
            throw error;
        }
+       
         
     //BEGIN: Global parameters*****************************************************************************
     
@@ -689,7 +691,6 @@
                 for(var j = 0; j < array.length; j++)
                     flattened.push(array[j]);
             }
-            console.log(flattened);
             if(line)
                 map.removeLayer(polyline);
             polyline = L.polyline(flattened, {color: 'red'}).addTo(map);
