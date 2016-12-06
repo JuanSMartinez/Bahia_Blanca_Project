@@ -12,7 +12,7 @@ With these objectives, information about the bus routes, position, velocity, pas
 2.	Visualize information of the APC (Automatic Passenger Counting System) system to optimize the operation cost of buses in the city of Bahía Blanca.
 3.	Preprocess transport data to derive statistics about the population that enable analysts to characterize the behavior of buses and passengers to a certain extent.
 
-For more information about the proyect, please read our  [documents.](https://github.com/JuanSMartinez/Visual_Analytics_201620/tree/master/Documentos)
+For more information about the proyect, please read our  [documents.](https://github.com/JuanSMartinez/Bahia_Blanca_Project/tree/master/Documents)
 
 ### Visualization characteristics
 
