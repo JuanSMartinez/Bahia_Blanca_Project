@@ -1,8 +1,9 @@
 (function(){
-
+    
     //BEGIN: Read json***************************************************************************
-    d3.json("json/buses.json", function(error, data){
-       if(error){
+    d3.json("json/buses_final_passenger.json", function(errorP, dataP){
+    d3.json("json/buses_final_velocity.json", function(error, data){
+       if(error || errorP){
            throw error;
        }
         
@@ -73,6 +74,13 @@
         .attr("font-size", txtSize + "px")
         .attr("dy",0)
         .text("Gráfica enfocada:");
+    var avgHovered = hoverInfoContainer.append("text")
+        .attr("x", margin.left)
+        .attr("y", margin.top + 8*txtSize)
+        .attr("font-family", "Arial")
+        .attr("font-size", txtSize + "px")
+        .attr("dy",0)
+        .text("Promedio:");
         
     //Velocity chart container
     var velocityContainer = svg.append("g").attr("transform", "translate("+(2*rMonth+radialDelta + horizonDelta/2)+","+effHeight/2+")");
@@ -92,7 +100,7 @@
             .style("stroke-width", 1)
             .style("stroke", "black")
             .style("fill", "none")
-            .on("click", function(){clickedLatLng(d3.mouse(this)[0],d3.mouse(this)[1], (2*rMonth+radialDelta + horizonDelta/2));});
+            .on("click", function(){clickedLatLng(d3.mouse(this)[0],d3.mouse(this)[1], (2*rMonth+radialDelta + horizonDelta/2), "Velocidad");});
     velocityHoverRect.on("mousemove", function(){
         cursorLineV.attr("x1", d3.mouse(this)[0] );
         cursorLineV.attr("x2", d3.mouse(this)[0] );
@@ -117,7 +125,7 @@
             .style("stroke-width", 1)
             .style("stroke", "black")
             .style("fill", "none")
-            .on("click",function(){clickedLatLng(d3.mouse(this)[0],d3.mouse(this)[1], (2*rMonth+radialDelta + horizonDelta + hWidth));});
+            .on("click",function(){clickedLatLng(d3.mouse(this)[0],d3.mouse(this)[1], (2*rMonth+radialDelta + horizonDelta + hWidth), "Pasajeros");});
     peopleHoverRect.on("mousemove", function(){
         cursorLineP.attr("x1", d3.mouse(this)[0] );
         cursorLineP.attr("x2", d3.mouse(this)[0] );
@@ -197,7 +205,14 @@
     .style("text-anchor", "start");
         
     //Filtered data
+    var avgV=[];
+    var avgP=[];
     var filtered;
+    var filetredP;
+    var filteredDateV;
+    var filteredDateP;
+    var filteredLatLongV;
+    var filteredLatLongP;
         
     //Localization data
     var localizationData;
@@ -326,7 +341,7 @@
         function dragended(d) {
           d3.select(this)
             .classed("dragging", false);
-            filterData(data);
+            filterData(data, dataP);
             update(); 
             
             
@@ -485,7 +500,7 @@
         function dragended(d) {
           d3.select(this)
             .classed("dragging", false);
-            filterData(data);
+            filterData(data, dataP);
             update();
         }
     }
@@ -498,90 +513,241 @@
     //END: Generate control sliders*****************************************************************************
     
     //BEGIN: Filter data*****************************************************************************
-    /*
-    function filterData(rawData){
+    
+    function filterData(dataVelocity, dataPeople){
+        
+        //Reset averages
+        avgP=[];
+        avgV=[];
 
         //Filter by date    
-        var filteredDate = rawData.map(function(d){
-            if (d["Anio"] == 2010 && d["Mes"] == 6 && d["Dia"] == 25)
+        filteredDateV = dataVelocity.map(function(d){
+            if (d["Anio"] == year && d["Mes"] == month && d["Dia"] == day)
                 return d;
         });
-
-
-        //Unique line ids
-        var ids = [];
-        filteredDate.forEach(function(d){
-            var index = ids.indexOf(d["Linea"]);
-            if(index < 0)
-                ids.push(d["Linea"])
+        filteredDateP = dataPeople.map(function(d){
+            if (d["Anio"] == year && d["Mes"] == month && d["Dia"] == day)
+                return d;
         });
-
-        //Array of average velocities per hour
-        var array = [];
-        ids.forEach(function(d, i){
-            var avgHour = []
-            hours.forEach(function(h){
-                var averageHour = 0;
-                var count = 0;
-                filteredDate.forEach(function(f){
-                    if(f["Hora"] == h && f["Linea"] == d){
-                        averageHour += f["Velocidad"];
-                        count += 1;
-                    }  
-                });
-                avgHour[h] = isNaN(averageHour/count) ? 0 : averageHour/count; 
-            });
-            array[i] = avgHour;
-        });   
         
-        filtered = array;
-        
-    }
-    */
-    //END: Filter data*****************************************************************************************
-        
-    //BEGIN: Temporal Filter data function
-        
-    var testPositions = [[-38.717341, -62.267464],
-                         [-38.712874, -62.261685],
-                         [-38.709749, -62.263971],
-                         [-38.705840, -62.267190],
-                         [-38.707552, -62.269233],
-                         [-38.709261, -62.267450],
-                         [-38.710902, -62.269939],
-                         [-38.711672, -62.269080],
-                         [-38.714041, -62.271880],
-                         [-38.706127, -62.282372],
-                         [-38.714810, -62.293149],
-                        [-38.710362, -62.298823],
-                        [-38.721018, -62.312818],
-                        [-38.710175, -62.326898]];
-    
-    function filterData(rawData){
-        
-        n = 48;
-        data = [];
-        positions = [];
-        for(var c = 0; c< numberOfCharts; c++){
-            array = [];
-            arrayPos = [];
-            for (var i = 0 ; i < n; i++){
-                y = 1*(Math.random()*10-5);
-                array.push([i,y]);
-                randomIndex = Math.floor(Math.random() * 9);
-                arrayPos.push(testPositions[randomIndex]);
+        //Filter velocity
+        arrayV = [];
+        arrayLatLongV = [];
+        for(var i = 0; i < numberOfCharts; i++){
+            velocityLine = [];
+            avg = 0;
+            velocities = [];
+            pairOfPairs = [];
+            for(var j = 0; j < 48; j++){
+                y = getVelocityOfPoint(i,j,filteredDateV)
+                velocities.push(y);
+                avg += y;
             }
-            data.push(array);
-            positions.push(arrayPos);
+            avg = avg/48;
+            avgV.push(avg);
+            for(var j = 0; j < 48; j++){
+                velocityLine.push([j,velocities[j] - avg]);
+                pairs = getLatLongVelocity(i,j,filteredDateV);
+                pairOfPairs.push(pairs);
+            }
+            arrayV.push(velocityLine);
+            arrayLatLongV.push(pairOfPairs);
         }
-        filtered = data;
-        localizationData = positions;
+        filtered = arrayV;
+        filteredLatLongV = arrayLatLongV;
+        
+        //Filter people
+        arrayP = [];
+        arrayLatLongP = [];
+        for(var i = 0; i < numberOfCharts; i++){
+            peopleLine = [];
+            avg = 0;
+            people = [];
+            pairOfPairs = [];
+            for(var j = 0; j < 48; j++){
+                y = getPeopleInPoint(i,j,filteredDateP)
+                people.push(y);
+                avg += y;
+            }
+            avg = avg/48;
+            avgP.push(avg);
+            for(var j = 0; j < 48; j++){
+                peopleLine.push([j,people[j] - avg]);
+                pairs = getLatLongPeople(i,j,filteredDateP);
+                pairOfPairs.push(pairs);
+            }
+            arrayP.push(peopleLine);
+            arrayLatLongP.push(pairOfPairs);
+        }
+        filteredP = arrayP;
+        filteredLatLongP = arrayLatLongP;
     }
     
+    function getVelocityOfPoint(lineIndex, halfHourIndex, filteredDateV){
+        //line name
+        var line = idRange[lineIndex];
+        
+        //Hour and minute
+        var hour = Math.floor((halfHourIndex+1)/2);
+        var minute = ((halfHourIndex+1)%2)*30;
+        
+        var averageVelocity = 0;
+        var count = 0;
+        filteredDateV.forEach(function(object){
+            if(object){
+               if(object["Minuto"] == minute && object["Hora"] == hour && object["Linea"] == line){
+                   averageVelocity += object["Velocidad"];
+                   count += 1;
+               } 
+            }
+        });
+        return count == 0 ? 0 : averageVelocity/count;
+    }
+        
+    function getPeopleInPoint(lineIndex, halfHourIndex, filteredDateP){
+        //line name
+        var line = idRange[lineIndex];
+        
+        //Hour and minute
+        var hour = Math.floor((halfHourIndex+1)/2);
+        var minute = ((halfHourIndex+1)%2)*30;
+        
+        var averagePeople = 0;
+        var count = 0;
+        filteredDateP.forEach(function(object){
+            if(object){
+               if(object["Minuto"] == minute && object["Hora"] == hour && object["Linea"] == line){
+                   averagePeople += object["Pasajeros"];
+                   count += 1;
+               } 
+            }
+        });
+        return count == 0 ? 0 : averagePeople/count;
+    }
+        
+    function getLatLongVelocity(lineIndex, halfHourIndex, filteredDateV){
+        //line name
+        var line = idRange[lineIndex];
+        
+        //Hour and minute
+        var hour = Math.floor((halfHourIndex+1)/2);
+        var minute = ((halfHourIndex+1)%2)*30;
+        
+        var pairs = [];
+        filteredDateV.forEach(function(object){
+            if(object){
+               if(object["Minuto"] == minute && object["Hora"] == hour && object["Linea"] == line){
+                   pairs.push([object["Latitud"], object["Longitud"]])
+               } 
+            }
+        });
+        return pairs;
+    }
+        
+    function getLatLongPeople(lineIndex, halfHourIndex, filteredDateP){
+        //line name
+        var line = idRange[lineIndex];
+        
+        //Hour and minute
+        var hour = Math.floor((halfHourIndex+1)/2);
+        var minute = ((halfHourIndex+1)%2)*30;
+        
+        var pairs = [];
+        filteredDateP.forEach(function(object){
+            if(object){
+               if(object["Minuto"] == minute && object["Hora"] == hour && object["Linea"] == line){
+                   pairs.push([object["Latitud"], object["Longitud"]])
+               } 
+            }
+        });
+        return pairs;
+    }
+    
+    //END: Filter data*****************************************************************************************
+    
+    //BEGIN: Get position values from clicked data in the horizon charts **************************************
+    var line = false;
+    var polyline;
+    function clickedLatLng(x, y, xShift, parameter){
+        
+        var linePosition = Math.floor((y - effHeight/2)/(chartHeight+2));
+        var halfHourSize = hWidth/48;
+        var halfHourPosition = Math.floor((x - xShift)/halfHourSize);
+        
+        if(parameter == "Velocidad"){
+            //Set marker
+            var latLong = filteredLatLongV[linePosition][halfHourPosition][0];
+            markers.removeLayer(marker);
+            marker = L.marker(latLong);
+            markers.addLayer(marker);
+            
+            //Flatten array
+            var original = filteredLatLongV[linePosition];
+            var flattened = [];
+            for(var i = 0; i < 48; i ++){
+                var array = original[i];
+                for(var j = 0; j < array.length; j++)
+                    flattened.push(array[j]);
+            }
+            console.log(flattened);
+            if(line)
+                map.removeLayer(polyline);
+            polyline = L.polyline(flattened, {color: 'red'}).addTo(map);
+            line=true;
+        }
+        else{
+            //Set marker
+            var latLong = filteredLatLongP[linePosition][halfHourPosition][0];
+            markers.removeLayer(marker);
+            marker = L.marker(latLong);
+            markers.addLayer(marker);
+            
+            //Flatten array
+            var original = filteredLatLongP[linePosition];
+            var flattened = [];
+            for(var i = 0; i < 48; i ++){
+                var array = original[i];
+                for(var j = 0; j < array.length; j++)
+                    flattened.push(array[j]);
+            }
+            if(line)
+                map.removeLayer(polyline);
+            polyline = L.polyline(flattened, {color: 'red'}).addTo(map);
+            line=true;
+        }
+        
+    }
+        
+    function showHoverValues(x, y, xShift, type){
+       
+        var linePosition = Math.floor((y - effHeight/2)/(chartHeight+2));
+        var halfHourSize = hWidth/48;
+        var halfHourPosition = Math.floor((x - xShift)/halfHourSize);
+        var halfHour = filtered[linePosition][halfHourPosition][0];
+        
+        busLineHovered.text("Linea: " + idRange[linePosition]);
+        hourHovered.text("Hora: " + Math.floor((halfHour+1)/2) + ":" + (((halfHour+1)%2)*30));
+        if(type == 0 ){
+            chartHovered.text("Gráfica enfocada: Velocidad");
+            avgHovered.text("Promedio: " + Math.round(100*avgV[linePosition])/100 + " km/h");
+        }
+        else{
+            chartHovered.text("Gráfica enfocada: Personas");
+            avgHovered.text("Promedio: " + Math.floor(avgP[linePosition]) + " persona(s)");
+        }
+        
+    }
+    
+    //END: Get position values from clicked data in the horizon charts ****************************************    
+        
     //BEGIN: Update of horizon charts***************************************************************************
     
     function update(){
-        
+        markers.removeLayer(marker);
+        marker = L.marker([-38.717530, -62.265174]);
+        markers.addLayer(marker);
+        if(polyline)
+            map.removeLayer(polyline);
         if(velocityContainers.length == 0){
             filtered.forEach(function(array, i){
                 var g = velocityContainer.append("g").attr("class","containerGV");
@@ -599,13 +765,9 @@
             
             //Join
             var chartIV = velocityContainers[i].selectAll("g").data([array]);
-            var chartIP = peopleContainers[i].selectAll("g").data([array]);
             
             //Update
             chartIV.attr("class","chart")
-                .attr("transform", "translate(0,"+i*(chartHeight+2)+")")
-                .call(chart.duration(2000));
-            chartIP.attr("class","chart")
                 .attr("transform", "translate(0,"+i*(chartHeight+2)+")")
                 .call(chart.duration(2000));
         
@@ -613,7 +775,20 @@
             chartIV.enter().append("g")
                 .attr("class","chart")
                 .attr("transform", "translate(0,"+i*(chartHeight+2)+")")
+                .call(chart.duration(2000));                                                              
+        });
+        
+        filteredP.forEach(function(array, i){
+            
+            //Join
+            var chartIP = peopleContainers[i].selectAll("g").data([array]);
+            
+            //Update
+            chartIP.attr("class","chart")
+                .attr("transform", "translate(0,"+i*(chartHeight+2)+")")
                 .call(chart.duration(2000));
+        
+            //Enter
             chartIP.enter().append("g")
                 .attr("class","chart")
                 .attr("transform", "translate(0,"+i*(chartHeight+2)+")")
@@ -659,6 +834,7 @@
     //END: Update of horizon charts*****************************************************************************
     
     //BEGIN: Text wrapping from Mike Bostock ******************************************************************  
+        
     function wrap(text, width) {
       text.each(function() {
         var text = d3.select(this),
@@ -683,57 +859,13 @@
         }
       });
     }
+        
     //END: Text wrapping from Mike Bostock ******************************************************************  
         
-    //BEGIN: Get position values from clicked data in the horizon charts **************************************
-    var line = false;
-    var polyline;
-    function clickedLatLng(x, y, xShift){
-        
-        var linePosition = Math.floor((y - effHeight/2)/(chartHeight+2));
-        var halfHourSize = hWidth/48;
-        var halfHourPosition = Math.floor((x - xShift)/halfHourSize);
-        var halfHour = filtered[linePosition][halfHourPosition][0];
-        var velocity = filtered[linePosition][halfHourPosition][1];
-        console.log(linePosition + ", " +halfHourPosition);
-        var localizationArray = localizationData[linePosition];
-        var latLong = localizationArray[halfHour];
-        markers.removeLayer(marker);
-        marker = L.marker(latLong);
-        markers.addLayer(marker);
-        
-        if(!line){
-            polyline = L.polyline(testPositions, {color: 'red'}).addTo(map);
-            line = true;
-        }
-        else{
-            map.removeLayer(polyline);
-            line = false;
-        }
-        
-    }
-        
-    function showHoverValues(x, y, xShift, type){
-       
-        var linePosition = Math.floor((y - effHeight/2)/(chartHeight+2));
-        var halfHourSize = hWidth/48;
-        var halfHourPosition = Math.floor((x - xShift)/halfHourSize);
-        var halfHour = filtered[linePosition][halfHourPosition][0];
-        
-        busLineHovered.text("Linea: " + idRange[linePosition]);
-        hourHovered.text("Hora: " + Math.floor((halfHour+1)/2) + ":" + (((halfHour+1)%2)*30));
-        if(type == 0 )
-            chartHovered.text("Gráfica enfocada: Velocidad");
-        else
-            chartHovered.text("Gráfica enfocada: Personas");
-    }
-    
-    //END: Get position values from clicked data in the horizon charts ****************************************
-        
-       filterData(data)  
+       filterData(data, dataP)  
        update()
     });
-    
+    });
     //END: Read json*****************************************************************************
 
 })();

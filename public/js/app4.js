@@ -73,6 +73,13 @@
         .attr("font-size", txtSize + "px")
         .attr("dy",0)
         .text("Gráfica enfocada:");
+    var avgHovered = hoverInfoContainer.append("text")
+        .attr("x", margin.left)
+        .attr("y", margin.top + 8*txtSize)
+        .attr("font-family", "Arial")
+        .attr("font-size", txtSize + "px")
+        .attr("dy",0)
+        .text("Promedio:");
         
     //Velocity chart container
     var velocityContainer = svg.append("g").attr("transform", "translate("+(2*rMonth+radialDelta + horizonDelta/2)+","+effHeight/2+")");
@@ -568,7 +575,7 @@
             for (var i = 0 ; i < n; i++){
                 y = 1*(Math.random()*10-5);
                 array.push([i,y]);
-                randomIndex = Math.floor(Math.random() * 9);
+                randomIndex = Math.floor(Math.random() * 13);
                 arrayPos.push(testPositions[randomIndex]);
             }
             data.push(array);
@@ -722,10 +729,14 @@
         
         busLineHovered.text("Linea: " + idRange[linePosition]);
         hourHovered.text("Hora: " + Math.floor((halfHour+1)/2) + ":" + (((halfHour+1)%2)*30));
-        if(type == 0 )
+        if(type == 0 ){
             chartHovered.text("Gráfica enfocada: Velocidad");
-        else
+            avgHovered.text("Promedio: " + Math.round(100*(Math.random()*60))/100 + " km/h");
+        }
+        else{
             chartHovered.text("Gráfica enfocada: Personas");
+            avgHovered.text("Promedio: " + Math.floor(Math.random()*50) + " persona(s)");
+        }
     }
     
     //END: Get position values from clicked data in the horizon charts ****************************************
