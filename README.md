@@ -18,6 +18,10 @@ With these objectives, information about the bus routes, position, velocity, pas
 
 For more information about the proyect, please read our  [documents.](https://github.com/JuanSMartinez/Bahia_Blanca_Project/tree/master/Documents)
 
+### Source
+
+This visualization was created using the D3 version 4 javascript framework along with the horizon chart implementation by David H. Bronke from his [codepen](http://codepen.io/whitelynx/pen/dpbvPb) example. The source javascript files are located in the public/js directory which control the behavior of the vis.html and vis_generic.html pages.
+
 ### Visualization characteristics
 
 #### What:
